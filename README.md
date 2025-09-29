@@ -1,4 +1,5 @@
-# AI for Maternal Health & Early Outbreak Warning
+# Maternal Health Early Warning
+## AI for Maternal Health & Early Outbreak Warning
 
 This repository hosts a **prototype system** that demonstrates how artificial intelligence can be applied to improve **maternal health risk screening** and **early outbreak detection** in low-resource settings.
 The project is inspired by the UNCTAD 2021 white paper on **AI for Good**, focusing on practical, interpretable solutions that can be run on modest infrastructure.
