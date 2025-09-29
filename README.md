@@ -38,8 +38,8 @@ The project is inspired by the UNCTAD 2021 white paper on **AI for Good**, focus
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/maternal-outbreak-mvp.git
-cd maternal-outbreak-mvp
+git clone https://github.com/<your-username>/maternal-health-early-warning.git
+cd maternal-health-early-warning
 ```
 
 ### 2. Create and activate a virtual environment
