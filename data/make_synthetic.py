@@ -24,11 +24,23 @@ df_m = pd.DataFrame({"age": age, "systolic_bp": sys_bp, "diastolic_bp": dia_bp,
 df_m.to_csv(out_dir / "maternal_inputs.csv", index=False)
 
 # Symptoms time series
+"""
+We are limiting to 1-3 cases per day thus baseline
+
+symptoms.csv:
+location,date,fever,cough,diarrhea
+Clinic A,2025-08-01,3,2,4
+Clinic B,2025-08-02,4,4,2
+Clinic C,2025-08-03,3,2,2
+
+where fever = 3 , cough = 2 and diarrhea = 4
+indicates 3 fever patient visited Clinic A on a day.
+"""
 start = date.today() - timedelta(days=60)
 locs = ["Clinic A", "Clinic B", "Clinic C"]
 rows = []
 for loc in locs:
-    baseline = rng.integers(1, 4)
+    baseline = rng.integers(1, 4) # defines the baseline of the cases per day
     for i in range(61):
         d = start + timedelta(days=i)
         # occasional spikes
