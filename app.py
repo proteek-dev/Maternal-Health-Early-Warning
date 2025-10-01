@@ -61,7 +61,7 @@ page = st.sidebar.radio("Go to", ["Maternal Risk", "Outbreak Dashboard",
 
 # -------- Maternal Risk Page --------
 if page == "Maternal Risk":
-    st.title("Maternal Risk Screening (MVP)")
+    st.title("Maternal Risk Screening")
     model = load_model()
 
     with st.form("maternal_form"):
@@ -105,7 +105,7 @@ if page == "Maternal Risk":
 
 # -------- Outbreak Dashboard --------
 elif page == "Outbreak Dashboard":
-    st.title("Early Outbreak Warning (MVP)")
+    st.title("Early Outbreak Warning")
     conn = get_conn()
     dfs = pd.read_sql_query("SELECT location, date, fever, cough, diarrhea FROM symptoms", conn)
     conn.close()
@@ -131,6 +131,7 @@ elif page == "Outbreak Dashboard":
 elif page == "Data Upload":
     st.title("Upload Data")
     st.write("Upload a CSV for symptoms with columns: location,date,fever,cough,diarrhea")
+    st.write("Which will Update the Outbreak Dashboard accordingly.")
 
     uploaded = st.file_uploader("symptoms.csv", type=["csv"])
     if uploaded:
@@ -151,7 +152,10 @@ elif page == "Data Upload":
             upsert_symptoms(df)
             st.success(f"Inserted {len(df)} rows from sample.")
         else:
-            st.error("Sample file not found. Run data/make_synthetic.py first.")
+            st.error("Sample file not found.")
+            st.error("1. Run data/make_synthetic.py first, before streamlit run app.py")
+            st.error("2. Run data/make_synthetic_symptoms.py to generate more realistic symptoms data.")
+            st.error("3. OR generate synthetic CSVs from the Admin tab.")
 
 # -------- Admin --------
 elif page == "Admin":
@@ -162,7 +166,7 @@ elif page == "Admin":
     with c1:
         if st.button("Train maternal model (synthetic)"):
             from models.train_maternal import make_synthetic, train_and_save
-            df = make_synthetic(1500)
+            df = make_synthetic(1000000)
             models_dir = Path(__file__).resolve().parent / "models"
             out = models_dir / "maternal_model.pkl"
             metrics = train_and_save(df, out)
