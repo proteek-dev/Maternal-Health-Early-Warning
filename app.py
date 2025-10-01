@@ -10,7 +10,8 @@ from datetime import date
 from db import init_db, get_conn
 from models.outbreak_utils import compute_anomaly_scores
 
-st.set_page_config(page_title="Maternal Health & Outbreak Early Warning", layout="wide")
+st.set_page_config(page_title="Maternal Health & Outbreak Early Warning",
+                   layout="wide")
 init_db()
 
 MODELS_DIR = Path(__file__).resolve().parent / "models"
@@ -19,7 +20,8 @@ MODEL_PATH = MODELS_DIR / "maternal_model.pkl"
 @st.cache_resource
 def load_model():
     if not MODEL_PATH.exists():
-        st.warning("Model not trained yet. Click the 'Admin' tab to train a synthetic model.")
+        st.warning("Model not trained yet. Click the 'Admin' tab to " \
+        "train a synthetic model.")
         return None
     with open(MODEL_PATH, "rb") as f:
         return pickle.load(f)
@@ -28,7 +30,8 @@ def insert_patient_row(payload: dict, risk_score: float, risk_label: str):
     conn = get_conn()
     cur = conn.cursor()
     cur.execute("""
-        INSERT INTO patients(age, systolic_bp, diastolic_bp, hemoglobin, gestational_weeks, previous_preeclampsia, risk_score, risk_label)
+        INSERT INTO patients(age, systolic_bp, diastolic_bp, hemoglobin, 
+                gestational_weeks, previous_preeclampsia, risk_score, risk_label)
         VALUES(?,?,?,?,?,?,?,?)
     """, (
         payload["age"], payload["systolic_bp"], payload["diastolic_bp"],
@@ -46,13 +49,15 @@ def upsert_symptoms(df: pd.DataFrame):
         cur.execute("""
             INSERT INTO symptoms(location, date, fever, cough, diarrhea)
             VALUES(?,?,?,?,?)
-        """, (r["location"], r["date"], int(r["fever"]), int(r["cough"]), int(r["diarrhea"])))
+        """, (r["location"], r["date"], int(r["fever"]), int(r["cough"]),
+              int(r["diarrhea"])))
     conn.commit()
     conn.close()
 
 # Sidebar
 st.sidebar.header("Navigation")
-page = st.sidebar.radio("Go to", ["Maternal Risk", "Outbreak Dashboard", "Data Upload", "Admin"])
+page = st.sidebar.radio("Go to", ["Maternal Risk", "Outbreak Dashboard",
+                                  "Data Upload", "Admin"])
 
 # -------- Maternal Risk Page --------
 if page == "Maternal Risk":
@@ -108,7 +113,7 @@ elif page == "Outbreak Dashboard":
     if dfs.empty:
         st.info("No symptom data yet. Upload via 'Data Upload' page.")
     else:
-        window = st.slider("Rolling window (days)", 3, 14, 7)
+        window = st.slider("Rolling window (days)", 5, 14, 7)
         scores = compute_anomaly_scores(dfs, window=window)
         # Show today's z-scores by location
         today = pd.to_datetime(date.today())
